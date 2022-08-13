@@ -43,7 +43,7 @@ const index = (req,res) => {
             fs.renameSync(image.path, target); 
             connection.query({
             sql: 'INSERT INTO products (users_id, name, price, stock, status, image_url) VALUES (?, ?, ?, ?, ?, ?)',
-            values: [parseInt(users_id), name, price, stock, status `http://localhost:3000/public/${image.originalname}`]
+            values: [parseInt(users_id), name, price, stock, status `http://localhost:${port}/public/${image.originalname}`]
           }, _response(res));
         }  
   }
@@ -58,7 +58,7 @@ const index = (req,res) => {
             const target = path.join(__dirname, '../../uploads', image.originalname);
             fs.renameSync(image.path, target); 
           sql =  'UPDATE products SET users_id = ?, name = ?, price = ?, stock = ?, status = ?, image_url = ? WHERE id =?',
-          values = [parseInt(users_id), name, price, stock, status `http://localhost:3000/public/${image.originalname}`, req.params.id]
+          values = [parseInt(users_id), name, price, stock, status `http://localhost:${port}/public/${image.originalname}`, req.params.id]
        
         }  else {
           sql =  'UPDATE products SET users_id = ?, name = ?, price = ?, stock = ?, status = ?  WHERE id =?',

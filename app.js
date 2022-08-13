@@ -4,6 +4,9 @@ const app = express();
 const productRouter = require('./app/product/routes');
 const productRouterV2 = require('./app/productv2/routes');
 const logger = require ('morgan');
+const port = process.env.PORT || 8080;
+
+
 
 
 app.use(logger('dev'));
@@ -20,4 +23,4 @@ app.use((req, res, next) => {
     })
 })
 
-app.listen(3000, () => console.log('Server: http://localhost:3000'))
+app.listen(port, () => console.log(`Server: http://localhost:${port}`));

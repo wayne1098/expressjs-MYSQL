@@ -12,7 +12,7 @@ const create = async (req, res) => {
         fs.renameSync(image.path, target);
         try {
             await Product.sync();
-            const result = await Product.create({users_id, name, price, stock, status, image_url: `http://localhost:3000/public/${image.originalname}`});
+            const result = await Product.create({users_id, name, price, stock, status, image_url: `http://localhost:${port}/public/${image.originalname}`});
             res.status(200).send({
                 message: `Product successfully Created`,
                 data: result,
@@ -101,7 +101,7 @@ const update = async (req, res) => {
             price,
             stock,
             status,
-            image: `http://localhost:3000/public/${image.originalname}`
+            image: `http://localhost:${port}/public/${image.originalname}`
         }
     } 
     else {
