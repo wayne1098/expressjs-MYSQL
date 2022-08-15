@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs');
 
 
+
 const create = async (req, res) => {
     const {users_id, name, price, stock, status} = req.body;
     const image = req.file;
