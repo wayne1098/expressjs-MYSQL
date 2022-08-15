@@ -23,4 +23,4 @@ app.use((req, res, next) => {
     })
 })
 
-app.listen(port, () => console.log(`Server: http://localhost:${port}`));
+app.listen(port, () => console.log(`Server: http://localhost:${port}//api/v1/product`));
