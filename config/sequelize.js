@@ -1,13 +1,12 @@
-
 const {Sequelize} = require('sequelize');
+// const Sequelize = require('sequelize');
 
 const sequelize = new Sequelize({
-   
+    database: 'wawan-crudsv2',
     host: 'localhost',
     username: 'root',
     password: 'root',
-    dialect: 'mysql',
-    database: 'wawan-crudsv2'
+    dialect: 'mysql'
 
 });
 
