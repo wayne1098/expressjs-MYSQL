@@ -1,13 +1,15 @@
-const Product = require('./model');
-const { Op } = require("sequelize");
+const Product = require('./model'); 
+const { Op } = require("sequelize");  
 const path = require('path'); 
 const fs = require('fs');
+const port = process.env.PORT || 8080;
+
 
 
 
 const create = async (req, res) => {
-    const {users_id, name, price, stock, status} = req.body;
-    const image = req.file;
+    const {users_id, name, price, stock, status} = req.body; 
+    const image = req.file; 
     if(image) {
         const target = path.join(__dirname, '../../uploads', image.originalname); 
         fs.renameSync(image.path, target);
@@ -24,15 +26,14 @@ const create = async (req, res) => {
     }
 }
 
-
 const findAll = async (req,res) => {
-    const {q} = req.query;
-    let query = {} 
+    const {q} = req.query; 
+    let nameQuery = {} 
     try {
         await Product.sync();
         q && (
-                query = {
-                    where: { 
+            nameQuery = {
+                where: { 
                     name: {
                         [Op.like]: `%${q}%`
                     }
@@ -43,19 +44,19 @@ const findAll = async (req,res) => {
             }
         )
         !q && (
-                query = {
-                    attributes: {
+            nameQuery = {
+                attributes: {
                     exclude: ['createdAt', 'updatedAt']
                 }
             }
         )
-        const result = await Product.findAll(query);
+        const result = await Product.findAll(nameQuery);
         res.status(200).send({
             message: `Success`,
             data: result
         })
     } catch (error) {
-    res.send(error);
+        res.send(error);
     }
 }
 
@@ -65,34 +66,33 @@ const findById = async (req,res) => {
         await Product.sync();
         const result = await Product.findOne({
             where: {
-            id
+                id
             },
             attributes: {
-            exclude: ['createdAt', 'updatedAt']
+                exclude: ['createdAt', 'updatedAt']
             }
-            });
+        });
         if (result === null){
-                res.status(404).send({
+            res.status(404).send({
                 message: `Product with id ${id} not found`
             })
         } else {
-                res.status(200).send({
+            res.status(200).send({
                 message: `Success`,
                 data: result
 
             })
         }
     } catch (error) {
-         res.send(error);
+        res.send(error);
     }
 }
+
 const update = async (req, res) => {
     const {users_id, name, price, stock, status} = req.body; 
-    const {id} = req.params;
-    const image = req.file;
-    let body = {};
-
-  
+    const {id} = req.params; 
+    const image = req.file; 
+    let body = {}; 
     if(image) {
         const target = path.join(__dirname, '../../uploads', image.originalname);
         fs.renameSync(image.path, target);
@@ -102,7 +102,7 @@ const update = async (req, res) => {
             price,
             stock,
             status,
-            image: `http://localhost:${port}/public/${image.originalname}`
+            image_url: `http://localhost:${port}/public/${image.originalname}`
         }
     } 
     else {
@@ -111,7 +111,7 @@ const update = async (req, res) => {
             name,
             price,
             stock,
-            status,
+            status
         }
     }
     try {
@@ -141,8 +141,9 @@ const update = async (req, res) => {
         res.send(error);
     }
 }
+
 const destroy = async (req,res) => {
-    const {id} = req.params;
+    const {id} = req.params; 
     try {
         await Product.sync();
         const existId = await Product.findOne({
@@ -163,17 +164,14 @@ const destroy = async (req,res) => {
             })
         }
     } catch (error) {
-
         res.send(error);
     }
 }
 
-
-
 module.exports = {
-    create,
-    findAll,
-    findById,
-    update,
+    create, 
+    findAll, 
+    findById, 
+    update, 
     destroy
-};
+}
