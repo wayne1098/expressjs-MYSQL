@@ -75,24 +75,22 @@ const update = async (req, res) => {
 };
 
 const del = async (req, res) => {
-    const {users_id, name, price, stock, status} = req.body;
-    const image = req.file;
-    const id = req.params.id;
-    let find = await Product.findByPk(id);
-    if (image) {
-        const target = path.join(__dirname, '../../uploads', image.originalname);
-        fs.renameSync(image.path, target);
-        try {
-            const result  = await find.destroy({users_id, name, price, stock, status, image_url: `http://localhost:${port}/public/${image.originalname}`});
-            res.json({
-                "message" : "Deleted data succes",
-            })
-        }catch (error) {
-            res.json({ message: error.message })
-            console.log(error);
+    const product = await Product.destroy({
+        where: {
+            id: req.params.id
         }
+    });
+    try {
+        res.json({
+        status: "Deleted data succes",
+        data: product[0],
+        });
+      } catch (error) {
+        res.json({ message: error.message })
+        console.log(error);
+      }
+    
     }
-};
 
 module.exports = {
     create, 
