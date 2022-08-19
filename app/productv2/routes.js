@@ -4,15 +4,15 @@ const multer = require('multer');
 const path = require ('path');
 const fs = require ('fs');
 const upload = multer({dest: 'uploads'});
-const { create, findAll, findById, update, destroy } = require('./controller');
+const { create, show, showId, update, del } = require('./controller');
 
 
 
 router.post('/product', upload.single('image'), create);
-router.get('/product', findAll);
-router.get('/product/:id', findById);
+router.get('/product', show);
+router.get('/product/:id', showId);
 router.put('/product/:id', upload.single('image'), update);
-router.delete('/product/:id', destroy);
+router.delete('/product/:id', del);
 
 // router.post('/product' , upload.single('image'), async (req, res) =>{
 //     const {users_id, name, price, stock, status} = req.body;

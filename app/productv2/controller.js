@@ -26,152 +26,78 @@ const create = async (req, res) => {
     }
 }
 
-const findAll = async (req,res) => {
-    const {q} = req.query; 
-    let nameQuery = {} 
+const show = async (req, res) => {
+    const product = await Product.findAll();
     try {
-        await Product.sync();
-        q && (
-            nameQuery = {
-                where: { 
-                    name: {
-                        [Op.like]: `%${q}%`
-                    }
-                },
-                attributes: {
-                    exclude: ['createdAt', 'updatedAt']
-                }
-            }
-        )
-        !q && (
-            nameQuery = {
-                attributes: {
-                    exclude: ['createdAt', 'updatedAt']
-                }
-            }
-        )
-        const result = await Product.findAll(nameQuery);
-        res.status(200).send({
-            message: `Success`,
-            data: result
-        })
-    } catch (error) {
-        res.send(error);
-    }
-}
-
-const findById = async (req,res) => {
-    const {id} = req.params;
-    try {
-        await Product.sync();
-        const result = await Product.findOne({
-            where: {
-                id
-            },
-            attributes: {
-                exclude: ['createdAt', 'updatedAt']
-            }
+        res.json({
+        status: "Get data Success",
+        data: product,
         });
-        if (result === null){
-            res.status(404).send({
-                message: `Product with id ${id} not found`
-            })
-        } else {
-            res.status(200).send({
-                message: `Success`,
-                data: result
+      } catch (error) {
+        res.json({ message: error.message })
+        console.log(error);
+      }
+};
 
-            })
+const showId = async (req, res) => {
+    const product = await Product.findAll({
+        where: {
+            id: req.params.id
         }
-    } catch (error) {
-        res.send(error);
-    }
-}
+    });
+    try {
+        res.json({
+        status: "Get data Success",
+        data: product[0],
+        });
+      } catch (error) {
+        res.json({ message: error.message })
+        console.log(error);
+      }
+};
 
 const update = async (req, res) => {
-    const {users_id, name, price, stock, status} = req.body; 
-    const {id} = req.params; 
-    const image = req.file; 
-    let body = {}; 
-    if(image) {
+    const {users_id, name, price, stock, status} = req.body;
+    const image = req.file;
+    const id = req.params.id;
+    let find = await Product.findByPk(id);
+    if (image) {
         const target = path.join(__dirname, '../../uploads', image.originalname);
         fs.renameSync(image.path, target);
-        body = {
-            users_id,
-            name,
-            price,
-            stock,
-            status,
-            image_url: `http://localhost:${port}/public/${image.originalname}`
-        }
-    } 
-    else {
-        body = {
-            users_id,
-            name,
-            price,
-            stock,
-            status
+        try {
+            const result  = await find.update({users_id, name, price, stock, status, image_url: `http://localhost:${port}/public/${image.originalname}`});
+            res.send(result);
+        }catch (error) {
+            res.json({ message: error.message })
+            console.log(error);
         }
     }
-    try {
-        await Product.sync();
-        const updateData = await Product.update(body, {
-            where: { id },
-        });
-        if(updateData === null) {
-            res.status(404).send({
-                message: `Product with id ${id} not found`
-            })
-        } else {
-            const result = await Product.findOne({
-                where: {
-                    id
-                },
-                attributes: {
-                    exclude: ['createdAt', 'updatedAt']
-                },
-            })
-            res.status(200).send({
-            message: `Data with id ${id} successfully updated`,
-            data: result
-            })
-        }
-    } catch (error) {
-        res.send(error);
-    }
-}
+};
 
-const destroy = async (req,res) => {
-    const {id} = req.params; 
-    try {
-        await Product.sync();
-        const existId = await Product.findOne({
-            where: { id }
-        })
-        if(existId === null){
-            res.status(404).send({
-                message: `Product with id ${id} not found`
+const del = async (req, res) => {
+    const {users_id, name, price, stock, status} = req.body;
+    const image = req.file;
+    const id = req.params.id;
+    let find = await Product.findByPk(id);
+    if (image) {
+        const target = path.join(__dirname, '../../uploads', image.originalname);
+        fs.renameSync(image.path, target);
+        try {
+            const result  = await find.destroy({users_id, name, price, stock, status, image_url: `http://localhost:${port}/public/${image.originalname}`});
+            res.json({
+                "message" : "Deleted data succes",
             })
-        } else { 
-            await Product.destroy({
-                where: {
-                    id
-                },
-            });
-            res.status(200).send({
-                message: `Product with id ${id} succesfully deleted`
-            })
+        }catch (error) {
+            res.json({ message: error.message })
+            console.log(error);
         }
-    } catch (error) {
-        res.send(error);
     }
-}
+};
 
 module.exports = {
     create, 
-    findAll, 
-    findById, 
+    show, 
+    showId, 
     update, 
-    destroy
+    del
 }
