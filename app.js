@@ -3,7 +3,7 @@ const path= require('path');
 const app = express();
 // const productRouter = require('./app/product/routes');
 // const productRouterV2 = require('./app/productv2/routes');
-const productRouterV3 = require('./app/productv3/routes');
+// const productRouterV3 = require('./app/productv3/routes');
 const ProductRouterV4 = require("./app/productv4/routes");
 require("./config/mongoose");
 const logger = require ('morgan');
@@ -18,7 +18,7 @@ app.use(express.json());
 app.use('/public', express.static(path.join(__dirname, 'uploads')));
 // app.use('/api/v1', productRouter);
 // app.use('/api/v2', productRouterV2);
-app.use('/api/v3', productRouterV3);
+// app.use('/api/v3', productRouterV3);
 app.use('/api/v4', ProductRouterV4);
 app.use((req, res, next) => {
     res.status(404);

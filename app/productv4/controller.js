@@ -17,6 +17,7 @@ const view = (req, res) => {
 };
 const store = (req, res) => {
   const { name, price, stock, status } = req.body;
+  
   const image = req.file;
   if (image) {
     const target = path.join(__dirname, "../../uploads", image.originalname);
@@ -26,8 +27,22 @@ const store = (req, res) => {
     })
       .then((result) => res.send(result))
       .catch((error) => res.send(error));
-  }
+  
+
+} else {
+  Product.create( {
+        name,
+        price,
+        stock,
+        status,
+      },
+    
+  )
+    .then((result) => res.send(result))
+    .catch((error) => res.send(error));
+}
 };
+
 const update = (req, res) => {
   const { name, price, stock, status } = req.body;
   const image = req.file;

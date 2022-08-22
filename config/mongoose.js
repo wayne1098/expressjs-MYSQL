@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 mongoose.connect(
-  "mongodb://gunawan:123456@localhost:27017/wawan-mongoose?authSource=admin"
+  "mongodb://gunawan:123456@localhost:27017/wawangunawan-mongoose?authSource=admin"
 );
 
 const db = mongoose.connection;

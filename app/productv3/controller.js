@@ -20,18 +20,17 @@ const view = (req, res) => {
   }
 
 const store = (req , res) => {
-    const {name, price, stock, status} = req.body;
-    const image = req.file;
-    if(image) {
-        const target = path.join(__dirname, '../../uploads', image.originalname);
-        fs.renameSync(image.path, target)
-        db.collection('products').insertOne({name, price, stock, status, image_url: `http://localhost:${port}/public/${image.originalname}`})
-        .then(result => res.send(result))
-        .catch(error => res.send(error))
-
-    }
+  const {name, price, stock, status} = req.body; 
+  const image = req.file; 
+  if(image) {
+      const target = path.join(__dirname, '../../uploads', image.originalname); 
+      fs.renameSync(image.path, target);
+      db.collection('products').insertOne({name, price, stock, status, image_url: `http://localhost:${port}/public/${image.originalname}`})
+      .then(result => res.send(result))
+      .catch(error => res.send(error));
+  }
 }
-
+  
 const update = (req, res) => {
     const { name, price, stock, status } = req.body;
     const image = req.file;
@@ -63,7 +62,7 @@ const update = (req, res) => {
               name,
               price,
               stock,
-              status,
+              status
             },
           }
         )
@@ -78,7 +77,7 @@ const update = (req, res) => {
       .then((result) => res.send(result))
       .catch((error) => res.send(error));
   }
-  
+
  module.exports = { index,
                     view,
                     store,
